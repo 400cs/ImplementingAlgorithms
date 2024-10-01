@@ -12,6 +12,12 @@ import java.util.Scanner;
 
 public class Prog1
 {
+    /*
+     * Method: main
+     * Purpose: handles the file reading of txt file
+     * Parameters:
+     * Returns: none
+     */
     public static void main(String[] args)
     {
         // Take input from the user
@@ -35,6 +41,9 @@ public class Prog1
 
                 // Read the number of vertices
                 int numOfVertices = in.nextInt();
+
+                /* numOfVertices + 1 because 
+                graph vertice begin at 1 instead of 0 */
                 Graph graph = new Graph(numOfVertices + 1);
                 graphNum++;
 
@@ -47,6 +56,7 @@ public class Prog1
                     Scanner pairScanner = new Scanner(edge);
                     pairScanner.useDelimiter("[(,)]");
 
+                    // add edge to graph
                     int i = pairScanner.nextInt();
                     int j = pairScanner.nextInt();
                     graph.addEdge(i, j);
@@ -71,6 +81,5 @@ public class Prog1
         {
             e.printStackTrace();
         }
-        finally{}
     }
 }

@@ -4,13 +4,14 @@
 /* CS 3310, Fall 2024                                         */
 /* Programming Assignment 1                                   */
 /* Graph class: information about a single graph              */
+/*  uses Depth-First Search to find all of the graph's        */
+/*  connected components.                                     */
 /**************************************************************/
 
 import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class Graph {
-    private int numOfVertices;
     private boolean[] visited;
     private boolean[][] adjacencyMatrix;
     private ArrayList<TreeSet<Integer>> connectedComponents;
@@ -26,9 +27,8 @@ public class Graph {
      *           representing the graph edges
      * Returns: none
      */
-    public Graph(int numVertices) 
+    public Graph(int numOfVertices) 
     {
-        this.numOfVertices = numVertices;
         this.visited = new boolean[numOfVertices];
         this.adjacencyMatrix 
             = new boolean[numOfVertices][numOfVertices];
@@ -54,7 +54,8 @@ public class Graph {
      * Purpose: find and stores the
      *          graphs' components
      * Parameters:
-     * int vertex: 
+     * int vertex: the vertex to start 
+     * searching for components
      * Returns: none
      */
     public void findConnectedComponents(int vertex)
@@ -66,7 +67,6 @@ public class Graph {
                 TreeSet<Integer> component = new TreeSet<>();
                 dfs(i, component);
                 connectedComponents.add(component);
-                //System.out.print(components + " ");
             }
         }
     }
@@ -96,11 +96,10 @@ public class Graph {
     }
 
     /*
-     * Method: findConnectedComponents
+     * Method: displayConnectedComponents
      * Purpose: displays the graph's
      *          connect components
-     * Parameters:
-     * int vertex: 
+     * Parameters: none
      * Returns: none
      */
     public void displayConnectedComponents()
