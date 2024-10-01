@@ -59,8 +59,10 @@ public class Prog1
 
                 // display the connected components
                 graph.findConnectedComponents(1);
+                graph.displayConnectedComponents();
                 System.out.println("\n");
 
+                // read in the next line
                 line = br.readLine();
             }
             br.close();

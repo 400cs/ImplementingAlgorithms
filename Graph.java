@@ -6,12 +6,14 @@
 /* Graph class: information about a single graph              */
 /**************************************************************/
 
+import java.util.ArrayList;
 import java.util.TreeSet;
 
 public class Graph {
     private int numOfVertices;
     private boolean[] visited;
     private boolean[][] adjacencyMatrix;
+    private ArrayList<TreeSet<Integer>> connectedComponents;
 
     /*
      * Method: Constructor
@@ -24,12 +26,14 @@ public class Graph {
      *           representing the graph edges
      * Returns: none
      */
-    public Graph(int numOfVertices) 
+    public Graph(int numVertices) 
     {
-        this.numOfVertices = numOfVertices;
+        this.numOfVertices = numVertices;
         this.visited = new boolean[numOfVertices];
         this.adjacencyMatrix 
             = new boolean[numOfVertices][numOfVertices];
+        this.connectedComponents 
+            = new ArrayList<TreeSet<Integer>>();
     }
     
     /*
@@ -47,8 +51,8 @@ public class Graph {
 
     /*
      * Method: findConnectedComponents
-     * Purpose: find and display
-     *          graph's connect components
+     * Purpose: find and stores the
+     *          graphs' components
      * Parameters:
      * int vertex: 
      * Returns: none
@@ -59,9 +63,10 @@ public class Graph {
         {
             if (!visited[i])
             {
-                TreeSet<Integer> components = new TreeSet<>();
-                dfs(i, components);
-                System.out.print(components + " ");
+                TreeSet<Integer> component = new TreeSet<>();
+                dfs(i, component);
+                connectedComponents.add(component);
+                //System.out.print(components + " ");
             }
         }
     }
@@ -71,22 +76,49 @@ public class Graph {
      * Purpose: to traverse the graph
      * Parameters:
      * int vertex: the vertex to visit
-     * TreeSet<Integer> components:
+     * TreeSet<Integer> component:
      *      ordered set of connected vertices
      * Returns: none
      */
-    public void dfs(int vertex, TreeSet<Integer> components)
+    public void dfs(int vertex, TreeSet<Integer> component)
     {
         visited[vertex] = true;
-        components.add(vertex);
+        component.add(vertex);
         
         for (int j = 1; j < adjacencyMatrix[vertex].length; j++)
         {
             if (adjacencyMatrix[vertex][j] && !visited[j])
             {
-                dfs(j, components);
+                dfs(j, component);
             }
         }
         
+    }
+
+    /*
+     * Method: findConnectedComponents
+     * Purpose: displays the graph's
+     *          connect components
+     * Parameters:
+     * int vertex: 
+     * Returns: none
+     */
+    public void displayConnectedComponents()
+    {
+        if (connectedComponents.size() > 1)
+        {
+            System.out.print(connectedComponents.size()
+                         + " connected components: ");
+        }
+        else
+        {
+            System.out.print(connectedComponents.size()
+                         + " connected component: ");
+        }
+        
+        for(TreeSet<Integer> component : connectedComponents)
+        {
+            System.out.print(component + " ");
+        }
     }
 }
