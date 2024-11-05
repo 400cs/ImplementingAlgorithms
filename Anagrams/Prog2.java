@@ -42,6 +42,12 @@ public class Prog2
                 //Scanner in = new Scanner(line);
                 //in.close();
                 // read in the words from txt file
+                
+                // take word and toLowerCase() it
+                // pass this word to a funtion to get its signature
+                // store the word and signature
+
+
 
                 // Presorting each word by alphabetical order of the characters
                 // the presort here gives the signature for that word: aet (signature) -> eat, ate, tea
