@@ -43,7 +43,7 @@ public class Prog2
             userInput.close();
             String word = br.readLine();
 
-            Map<String, Set<String>> anagramMap = new HashMap<>();
+            TreeMap<String, Set<String>> anagramMap = new TreeMap<>();
             int count = 0;
             while(word != null || count < 100)
             {
@@ -66,12 +66,29 @@ public class Prog2
             }
             System.out.println("Anagrams");
             br.close();
-            System.out.println("There are " + anagramMap.size() + " anagram groups");
-            for (Set<String> anagrams : anagramMap.values())
+            //System.out.println("There are " + anagramMap.size() + " anagram groups");
+            int countGroup = 0;
+            int max = 0;
+            int size = 0;
+            Set<String> longest = new HashSet<>();
+            for (Map.Entry<String, Set<String>> anagrams : anagramMap.entrySet())
             {
-                System.out.println(anagrams);
+                size = anagrams.getValue().size();
+                if (size > 1)
+                {
+                    if (size > max)
+                    {
+                        max = size;
+                        longest = anagrams.getValue();
+                    }
+                    System.out.print(anagrams.getKey() + ": ");
+                    System.out.println(anagrams.getValue());
+                    countGroup+=1;
+                }
             }
-            System.out.println("There are " + anagramMap.size() + " anagram groups");
+            System.out.println("There are " + countGroup + " anagram groups");
+            System.out.print("The longest anagram group contains " + max + " anagrams. ");
+            System.out.println(longest);
 
         }
         catch (IOException e) 
@@ -102,7 +119,7 @@ public class Prog2
         char[] charArray = word.toLowerCase().toCharArray();
         Arrays.sort(charArray);
         String signature = String.valueOf(charArray);
-        signature = signature.replaceAll("[^a-zA-Z]", "");
+        //signature = signature.replaceAll("[^a-zA-Z]", "");
         return signature;
     }
     public static void insertToMap(Map<String, Set<String>> map, String key, String value)
