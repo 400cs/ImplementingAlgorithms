@@ -4,6 +4,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 
 /**************************************************************/
@@ -35,28 +41,38 @@ public class Prog2
             // Read in a line from inputed file
             BufferedReader br = new BufferedReader(new FileReader(fileName));
             userInput.close();
-            String line = br.readLine();
+            String word = br.readLine();
 
-            while(line != null)
+            Map<String, Set<String>> anagramMap = new HashMap<>();
+            int count = 0;
+            while(word != null || count < 100)
             {
                 //Scanner in = new Scanner(line);
                 //in.close();
                 // read in the words from txt file
-                
                 // take word and toLowerCase() it
                 // pass this word to a funtion to get its signature
-                // store the word and signature
-
-
-
                 // Presorting each word by alphabetical order of the characters
                 // the presort here gives the signature for that word: aet (signature) -> eat, ate, tea
                 // quicksort or mergesort
+                String key = sortString(word);
+                //System.out.println(key);
+                // store the word and signature
+                // hashmap (key: signature, value: set of words)
+                insertToMap(anagramMap, key, word);
 
-                line = br.readLine();
+                count += 1;
+                word = br.readLine();
             }
-
+            System.out.println("Anagrams");
             br.close();
+            System.out.println("There are " + anagramMap.size() + " anagram groups");
+            for (Set<String> anagrams : anagramMap.values())
+            {
+                System.out.println(anagrams);
+            }
+            System.out.println("There are " + anagramMap.size() + " anagram groups");
+
         }
         catch (IOException e) 
         {
@@ -70,5 +86,33 @@ public class Prog2
         // Comparing the adjacent words to find anagram
         // finding presorted element non-uniqueness b/c ate & tea presorted -> aet
         // comparing the signatures
+    }
+    /*
+     * Method: sortString
+     * Purpose: converts a string
+     * into a char array and sorts it
+     * alphabetically
+     * Parameters:
+     * String word - the string to convert into array and sort
+     * Returns: a sorted string - the alphabetical sorted characters
+     * of the word
+     */
+    public static String sortString(String word)
+    {
+        char[] charArray = word.toLowerCase().toCharArray();
+        Arrays.sort(charArray);
+        String signature = String.valueOf(charArray);
+        signature = signature.replaceAll("[^a-zA-Z]", "");
+        return signature;
+    }
+    public static void insertToMap(Map<String, Set<String>> map, String key, String value)
+    {
+        // Check if the key is already present
+        if (!map.containsKey(key)) {
+            // If the key is not present, create a new HashSet for the key
+            map.put(key, new HashSet<>());
+        }
+        // Add the value to the set associated with the key
+        map.get(key).add(value);
     }
 }
