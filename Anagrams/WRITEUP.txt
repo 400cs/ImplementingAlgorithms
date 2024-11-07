@@ -1,0 +1,2 @@
+traversing list of words in words.txt is O(n)
+sorting a word of lengh m is O(mlogm)

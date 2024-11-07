@@ -66,7 +66,7 @@ public class Prog2
             }
             System.out.println("Anagrams");
             br.close();
-            //System.out.println("There are " + anagramMap.size() + " anagram groups");
+            
             int countGroup = 0;
             int max = 0;
             int size = 0;
@@ -107,8 +107,7 @@ public class Prog2
     /*
      * Method: sortString
      * Purpose: converts a string
-     * into a char array and sorts it
-     * alphabetically
+     * into a char array and sorts it alphabetically
      * Parameters:
      * String word - the string to convert into array and sort
      * Returns: a sorted string - the alphabetical sorted characters
@@ -122,6 +121,7 @@ public class Prog2
         //signature = signature.replaceAll("[^a-zA-Z]", "");
         return signature;
     }
+
     public static void insertToMap(Map<String, Set<String>> map, String key, String value)
     {
         // Check if the key is already present
