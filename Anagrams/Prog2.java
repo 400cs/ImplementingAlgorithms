@@ -1,29 +1,34 @@
 package Anagrams;
 
+import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-
+import java.text.Normalizer;
 
 /**************************************************************/
 /* Benjamin Nguyen                                            */
 /* Student ID: 016068702                                      */
 /* CS 3310, Fall 2024                                         */
 /* Programming Assignment 2                                   */
-/* Prog2 class: handles the file reading and program display  */
+/* Prog2 class: finds anagrams in a text file and displays    */
+/* the outputed anagram sets in a text file                   */
 /**************************************************************/
 public class Prog2
 {
     /*
      * Method: main
-     * Purpose: handles the file reading of txt file
+     * Purpose: handles the file reading of txt file and calls 
+     * the methods for finding and displaying anagrams
      * Parameters:
      * Returns: none
      */
@@ -38,98 +43,125 @@ public class Prog2
 
         try
         {
-            // Read in a line from inputed file
-            BufferedReader br = new BufferedReader(new FileReader(fileName));
+            // Read in a word from the inputed file
+            BufferedReader br = new BufferedReader(new InputStreamReader
+                                (new FileInputStream(fileName), "utf-8"));
             userInput.close();
             String word = br.readLine();
 
+            // Use a hashmap to store a set of anagrams as the values
             TreeMap<String, Set<String>> anagramMap = new TreeMap<>();
-            int count = 0;
-            while(word != null || count < 100)
-            {
-                //Scanner in = new Scanner(line);
-                //in.close();
-                // read in the words from txt file
-                // take word and toLowerCase() it
-                // pass this word to a funtion to get its signature
-                // Presorting each word by alphabetical order of the characters
-                // the presort here gives the signature for that word: aet (signature) -> eat, ate, tea
-                // quicksort or mergesort
-                String key = sortString(word);
-                //System.out.println(key);
-                // store the word and signature
-                // hashmap (key: signature, value: set of words)
-                insertToMap(anagramMap, key, word);
 
-                count += 1;
+            while (word != null)
+            {
+                String key = sortString(word);
+
+                insertToMap(anagramMap, key, word);
+                // read in the next word
                 word = br.readLine();
             }
-            System.out.println("Anagrams");
             br.close();
-            
-            int countGroup = 0;
-            int max = 0;
-            int size = 0;
-            Set<String> longest = new HashSet<>();
-            for (Map.Entry<String, Set<String>> anagrams : anagramMap.entrySet())
-            {
-                size = anagrams.getValue().size();
-                if (size > 1)
-                {
-                    if (size > max)
-                    {
-                        max = size;
-                        longest = anagrams.getValue();
-                    }
-                    System.out.print(anagrams.getKey() + ": ");
-                    System.out.println(anagrams.getValue());
-                    countGroup+=1;
-                }
-            }
-            System.out.println("There are " + countGroup + " anagram groups");
-            System.out.print("The longest anagram group contains " + max + " anagrams. ");
-            System.out.println(longest);
 
+            printAnagramToFile(anagramMap);
         }
         catch (IOException e) 
         {
             e.printStackTrace();
         }
-        
-        
-        // Sorting the presorted word
-        // sort the words by their signature
-
-        // Comparing the adjacent words to find anagram
-        // finding presorted element non-uniqueness b/c ate & tea presorted -> aet
-        // comparing the signatures
     }
+
     /*
      * Method: sortString
      * Purpose: converts a string
      * into a char array and sorts it alphabetically
      * Parameters:
-     * String word - the string to convert into array and sort
-     * Returns: a sorted string - the alphabetical sorted characters
-     * of the word
+     * String word - the string to sort
+     * Returns: (a sorted string) signature - the string where its characters
+     * have been alphabetically sorted 
      */
     public static String sortString(String word)
     {
+        //String normalized = Normalizer.normalize(word, Normalizer.Form.NFD);
+        // Remove accents by keeping only ASCII characters (a-zA-Z0-9)
+        //normalized = normalized.replaceAll("[^\\p{ASCII}]", "");
+        //normalized = normalized.replace("'", "");
+
         char[] charArray = word.toLowerCase().toCharArray();
         Arrays.sort(charArray);
         String signature = String.valueOf(charArray);
-        //signature = signature.replaceAll("[^a-zA-Z]", "");
+    
         return signature;
     }
 
+    /*
+     * Method: insertToMap
+     * Purpose: 
+     * Parameters:
+     * Returns: 
+     */
     public static void insertToMap(Map<String, Set<String>> map, String key, String value)
     {
-        // Check if the key is already present
-        if (!map.containsKey(key)) {
+        // Check if key is already present
+        if (!map.containsKey(key)) 
+        {
             // If the key is not present, create a new HashSet for the key
             map.put(key, new HashSet<>());
         }
-        // Add the value to the set associated with the key
+        // Add the value(anagram) to the set associated with the its key(signature)
         map.get(key).add(value);
+    }
+
+    /*
+     * Method: printAnagramToFile
+     * Purpose: 
+     * Parameters:
+     * Returns: 
+     */
+    public static void printAnagramToFile(Map<String, Set<String>> anagramMap)
+    {
+        try
+        {
+            BufferedWriter writer = new BufferedWriter(
+                                    new FileWriter("output.txt"));
+            
+            int groupCount = 0;
+            int max = 0;
+            int size = 0;
+            Set<String> longestAnagram = new HashSet<>();
+
+            System.out.println("Beginning to write to file: output.txt");
+
+            for (Map.Entry<String, Set<String>> anagrams : anagramMap.entrySet())
+            {
+                size = anagrams.getValue().size();
+                /* the anagram set needs to contain more than 1 word
+                 to be consider an anagram */
+                if (size > 1)
+                {
+                    if (size > max)
+                    {
+                        max = size;
+                        longestAnagram = anagrams.getValue();
+                    }
+                    
+                    writer.write(anagrams.getKey() + " => ");
+                    for (String word : anagrams.getValue())
+                    {
+                        writer.write(word + "   ");
+                    }
+                    writer.write("\n");
+                    
+                    groupCount+=1;
+                }
+            }
+            writer.close();
+            System.out.println("There are " + groupCount + " anagram groups");
+            System.out.print("The longest anagram group contains " + max + " anagrams. ");
+            System.out.println(longestAnagram);
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
     }
 }
