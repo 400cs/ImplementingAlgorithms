@@ -1,5 +1,3 @@
-package Anagrams;
-
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -10,10 +8,8 @@ import java.util.Scanner;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.HashMap;
 import java.util.Map;
-import java.text.Normalizer;
 
 /**************************************************************/
 /* Benjamin Nguyen                                            */
@@ -50,18 +46,19 @@ public class Prog2
             String word = br.readLine();
 
             // Use a hashmap to store a set of anagrams as the values
-            TreeMap<String, Set<String>> anagramMap = new TreeMap<>();
+            Map<String, Set<String>> anagramMap = new HashMap<>();
 
             while (word != null)
             {
+                // sort the word to use as a key
                 String key = sortString(word);
-
+                // insert the key and its word into a map of string -> sets
                 insertToMap(anagramMap, key, word);
                 // read in the next word
                 word = br.readLine();
             }
             br.close();
-
+            // print the anagram groups to a file
             printAnagramToFile(anagramMap);
         }
         catch (IOException e) 
@@ -81,13 +78,11 @@ public class Prog2
      */
     public static String sortString(String word)
     {
-        //String normalized = Normalizer.normalize(word, Normalizer.Form.NFD);
-        // Remove accents by keeping only ASCII characters (a-zA-Z0-9)
-        //normalized = normalized.replaceAll("[^\\p{ASCII}]", "");
-        //normalized = normalized.replace("'", "");
-
+        // put the word's character into an array
         char[] charArray = word.toLowerCase().toCharArray();
+        // sort the characters alphabetically
         Arrays.sort(charArray);
+        // convert the sorted char array to a string
         String signature = String.valueOf(charArray);
     
         return signature;
@@ -95,9 +90,13 @@ public class Prog2
 
     /*
      * Method: insertToMap
-     * Purpose: 
-     * Parameters:
-     * Returns: 
+     * Purpose: inserts an anagram into a set and inserts the set in a map
+     * Parameters: 
+     * Map<String, Set<String>> map - the map to insert into
+     * String key - the key for the map is 
+     * the anagram's signature (an alphabetically sorted string)
+     * String value - the anagram to insert into the set
+     * Returns: None
      */
     public static void insertToMap(Map<String, Set<String>> map, String key, String value)
     {
@@ -113,9 +112,11 @@ public class Prog2
 
     /*
      * Method: printAnagramToFile
-     * Purpose: 
+     * Purpose: prints the anagram sets to an text file
+     * prints the number of sets of anagrams and the largest anagram set
      * Parameters:
-     * Returns: 
+     * Map<String, Set<String>> anagramMap - the map that holds the set of anagrams
+     * Returns: None
      */
     public static void printAnagramToFile(Map<String, Set<String>> anagramMap)
     {
@@ -124,10 +125,10 @@ public class Prog2
             BufferedWriter writer = new BufferedWriter(
                                     new FileWriter("output.txt"));
             
-            int groupCount = 0;
-            int max = 0;
-            int size = 0;
-            Set<String> longestAnagram = new HashSet<>();
+            int groupCount = 0; // number of anagram sets/groups
+            int max = 0; // number of words in the largest anagram set
+            int size = 0; // the size of the set
+            Set<String> largestAnagramGroup = new HashSet<>();
 
             System.out.println("Beginning to write to file: output.txt");
 
@@ -138,12 +139,14 @@ public class Prog2
                  to be consider an anagram */
                 if (size > 1)
                 {
+                    // Find the largest anagram set/group
                     if (size > max)
                     {
                         max = size;
-                        longestAnagram = anagrams.getValue();
+                        largestAnagramGroup = anagrams.getValue();
                     }
                     
+                    // print the anagram sets to a text file
                     writer.write(anagrams.getKey() + " => ");
                     for (String word : anagrams.getValue())
                     {
@@ -156,8 +159,8 @@ public class Prog2
             }
             writer.close();
             System.out.println("There are " + groupCount + " anagram groups");
-            System.out.print("The longest anagram group contains " + max + " anagrams. ");
-            System.out.println(longestAnagram);
+            System.out.print("The largest anagram group contains " + max + " anagrams. ");
+            System.out.println(largestAnagramGroup);
         } 
         catch (IOException e) 
         {

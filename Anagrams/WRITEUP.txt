@@ -1,2 +1,11 @@
+In the theoretical worst-case running time of the algorithm, it will
+1. traverse a text file of n number of words
+2. for each word of length m, it will sort the characters alphabetically
+3. each sorted word is inserted into a hashmap with its corresponding word
+
 traversing list of words in words.txt is O(n)
-sorting a word of lengh m is O(mlogm)
+sorting a word of lengh m is O(mlog(m))
+inserting a sorted word into a hashmap is O(1)
+
+sorting a word of lengh m is and inserting it into a hashmap is O(mlog(m) + 1) ∈ O(mlog(m))
+doing the step above for n words gives T(n) = O(n * mlog(m))
