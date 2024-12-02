@@ -1,0 +1,17 @@
+Description of the (recursive) formula - 
+The recursive formula is based on considering all possible intermediate posts between two given posts i and j.
+
+optimalCost[i][j] = minimum( optimalCost[i][j], optimalCost[i][k] + costMatrix[k][j] )
+where i < k < j
+
+Base Case:
+If j = i + 1, then there is a direct connection between i and j:
+optimalCost[i][j] = costMatrix[i][j]
+
+
+In the theoretical worst-case running time of the algorithm - 
+It will iterate over all possible pairs of posts and calculates the optimal costs using 3 nested loops.
+Outer Loop on Length: Number of iterations: n - 2
+Middle Loop on Starting Post i: Number of iterations for i: n - length
+Inner Loop on Intermediate Post k: Number of iterations: length - 1
+O(n^3)

@@ -1,0 +1,4 @@
+Put CanoeTrip, inputA, inputB, and inputC in the same directory
+Compile all java code (javac CanoeTrip.java)
+Run CanoeTrip (java CanoeTrip inputA inputB inputC)
+
